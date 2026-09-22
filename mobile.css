@@ -1,0 +1,77 @@
+/* iPhone向けの上書き（ベースはPC版の style.css） */
+body {
+  font-family: -apple-system, 'Hiragino Sans', system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+header {
+  flex-direction: column;
+  align-items: stretch;
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.summary {
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.summary div {
+  text-align: center;
+}
+
+main {
+  padding: 16px 16px 40px;
+}
+
+.cards {
+  grid-template-columns: 1fr;
+}
+
+.big {
+  padding: 16px;
+  font-size: 18px;
+}
+
+.big.export {
+  --c: #1f2328;
+}
+
+input,
+select {
+  font-size: 16px; /* 16px未満だと入力時に画面が勝手に拡大される */
+}
+
+.heatmap {
+  -webkit-overflow-scrolling: touch;
+}
+
+#recent td:nth-child(3),
+#recent th:nth-child(3) {
+  display: none; /* 狭い画面では時間帯を省く */
+}
+
+td,
+th {
+  padding: 6px 4px;
+  font-size: 13px;
+}
+
+.habit-list li {
+  flex-wrap: wrap;
+}
+
+.habit-list li > span {
+  flex-basis: 100%;
+}
+
+.legend {
+  white-space: nowrap;
+}
+
+.legend-note {
+  display: none;
+}

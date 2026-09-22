@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="習慣" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="apple-touch-icon" href="icon-180.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <title>習慣トラッカー</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="mobile.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>習慣トラッカー</h1>
+        <div id="today" class="muted"></div>
+      </div>
+      <div id="summary" class="summary"></div>
+    </header>
+
+    <main>
+      <section>
+        <h2>今日の習慣</h2>
+        <div id="cards" class="cards"></div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h2>積み重ね</h2>
+          <select id="heatmap-habit"></select>
+        </div>
+        <div class="panel">
+          <div id="heatmap" class="heatmap"></div>
+          <div id="legend" class="legend"></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>最近の記録</h2>
+        <div class="panel"><table id="recent"></table></div>
+      </section>
+
+      <section>
+        <h2>PCに送る</h2>
+        <div class="panel">
+          <button id="export-btn" class="big export">記録をメールで送る</button>
+          <p class="muted small">
+            共有メニューから「メール」を選んで自分宛てに送ってください。PC版の「iPhoneから取り込み」で添付ファイルを選ぶと、Obsidianに書き込まれます。何回送っても同じ記録が二重になることはありません。
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <details id="settings">
+          <summary>習慣の追加・編集</summary>
+          <div class="panel">
+            <ul id="habit-list" class="habit-list"></ul>
+            <form id="add-form" class="add-form">
+              <input id="add-name" placeholder="新しい習慣の名前" />
+              <button type="submit">追加</button>
+            </form>
+            <p class="muted small">一覧から外しても、過去の記録は消えません。</p>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="stats.js"></script>
+    <script src="local-api.js"></script>
+    <script src="app.js"></script>
+    <script src="export.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    </script>
+  </body>
+</html>

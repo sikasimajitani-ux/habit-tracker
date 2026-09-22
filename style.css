@@ -1,0 +1,356 @@
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --text: #1f2328;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --accent: #2f9e44;
+  --danger: #e03131;
+  --empty: #ebedf0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Yu Gothic UI', 'Meiryo', system-ui, sans-serif;
+  font-size: 14px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 28px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+main {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px 28px 48px;
+}
+
+section {
+  margin-bottom: 28px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 12px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.summary {
+  display: flex;
+  gap: 24px;
+}
+
+.summary div {
+  text-align: right;
+}
+
+.summary b {
+  display: block;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 習慣カード */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--c);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card.running {
+  box-shadow: 0 0 0 2px var(--c);
+}
+
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.card-title strong {
+  font-size: 16px;
+}
+
+.streak {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.streak b {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.card-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.card-stats b {
+  color: var(--text);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer {
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--c);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 6px 12px;
+}
+
+button:hover {
+  filter: brightness(0.96);
+}
+
+.big {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  color: #fff;
+  background: var(--c);
+}
+
+.big.stop {
+  background: var(--text);
+}
+
+.link {
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  padding: 0;
+  text-decoration: underline;
+}
+
+input,
+select {
+  font: inherit;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.card input {
+  width: 100%;
+}
+
+/* ヒートマップ（草） */
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+.heatmap {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: 14px repeat(7, 14px);
+  grid-auto-columns: 14px;
+  justify-content: start;
+  gap: 3px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.heatmap .cell {
+  border-radius: 3px;
+  background: var(--empty);
+}
+
+.heatmap .cell.future {
+  background: transparent;
+}
+
+.heatmap .cell.today {
+  outline: 2px solid var(--text);
+  outline-offset: -1px;
+}
+
+.heatmap .label {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* 最近の記録 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: normal;
+}
+
+td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+/* 設定 */
+details summary {
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.habit-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+}
+
+.habit-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.habit-list li span {
+  flex: 1;
+}
+
+.habit-list .danger {
+  color: var(--danger);
+}
+
+.add-form {
+  display: flex;
+  gap: 8px;
+}
+
+.add-form input {
+  flex: 1;
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+}
