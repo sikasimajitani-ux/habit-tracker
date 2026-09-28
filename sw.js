@@ -1,5 +1,5 @@
 // 自動生成（scripts/build-iphone.js）。電波がなくても開けるようにファイルを保存しておく
-const CACHE = 'habit-3f3e188e72';
+const CACHE = 'habit-5bfcf32372';
 const FILES = ["./","index.html","local-api.js","export.js","mobile.css","manifest.webmanifest","icon-180.png","icon-512.png","app.js","style.css","stats.js"];
 
 self.addEventListener('install', (e) => {

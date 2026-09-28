@@ -2,6 +2,8 @@
 const HEATMAP_WEEKS = 53; // 約1年分
 const LEVELS = [0, 1, 15, 30, 60]; // 分：この値以上で1段ずつ濃くなる
 const ALL = '__all__';
+const RECENT_STEP = 10; // 「最近の記録」の表示件数
+let recentLimit = RECENT_STEP;
 
 let state = { habits: [], running: {}, entries: [] };
 const memos = {}; // 計測中に入力したメモ（再描画で消えないように保持）
@@ -217,26 +219,98 @@ function renderHeatmap() {
 }
 
 // ---------- 最近の記録 ----------
+function entryKey(e) {
+  return { date: e.date, habit: e.habit, start: e.start, end: e.end };
+}
+
+function sortedEntries() {
+  return [...state.entries].sort((a, b) => (b.date + b.start).localeCompare(a.date + a.start));
+}
+
+// 1行を「修正中」の入力欄に差し替える
+function startEditEntry(tr, e) {
+  const start = el('input', { class: 'time', type: 'time', value: e.start });
+  const end = el('input', { class: 'time', type: 'time', value: e.end });
+  const memo = el('input', { placeholder: 'メモ' });
+  memo.value = e.memo || '';
+  const save = async () => {
+    const next = await run(() => window.api.updateEntry(entryKey(e), { start: start.value, end: end.value, memo: memo.value }));
+    if (next) toast('記録を直しました');
+  };
+  for (const input of [start, end, memo]) {
+    input.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') save();
+      if (ev.key === 'Escape') renderRecent();
+    });
+  }
+  tr.classList.add('editing');
+  // 表の列に押し込めると狭くなるので、1行まるごと使って入力欄を並べる
+  tr.replaceChildren(
+    el('td', { colspan: '6' },
+      el('div', { class: 'edit-box' },
+        el('span', { class: 'edit-label' },
+          e.date, ' ',
+          el('span', { class: 'dot', style: { background: colorOf(e.habit) } }),
+          e.habit,
+        ),
+        el('span', { class: 'edit-times' }, start, '〜', end),
+        memo,
+        el('span', { class: 'row-actions' },
+          el('button', { onclick: save }, '保存'),
+          el('button', { onclick: renderRecent }, 'やめる'),
+        ),
+      ),
+    ),
+  );
+  start.focus();
+}
+
 function renderRecent() {
-  const rows = [...state.entries]
-    .sort((a, b) => (b.date + b.start).localeCompare(a.date + a.start))
-    .slice(0, 10);
+  const all = sortedEntries();
+  const rows = all.slice(0, recentLimit);
   if (!rows.length) {
     $('recent').replaceChildren(el('tr', {}, el('td', { class: 'muted' }, 'まだ記録がありません。「開始」を押してみましょう。')));
+    $('recent-more').textContent = '';
     return;
   }
   $('recent').replaceChildren(
-    el('tr', {}, ['日付', '習慣', '時間帯', '時間', 'メモ'].map((h) => el('th', {}, h))),
-    ...rows.map((e) =>
-      el('tr', {},
+    el('tr', {}, ['日付', '習慣', '時間帯', '時間', 'メモ', ''].map((h) => el('th', {}, h))),
+    ...rows.map((e) => {
+      const tr = el('tr', {},
         el('td', {}, e.date),
         el('td', {}, el('span', { class: 'dot', style: { background: colorOf(e.habit) } }), e.habit),
         el('td', {}, `${e.start}〜${e.end}`),
         el('td', { class: 'num' }, fmtMin(e.minutes)),
         el('td', { class: 'muted' }, e.memo),
-      ),
-    ),
+        el('td', { class: 'row-actions' },
+          el('button', { onclick: () => startEditEntry(tr, e) }, '修正'),
+          el('button', {
+            class: 'danger',
+            onclick: async () => {
+              if (!confirm(`${e.date} の「${e.habit}」（${fmtMin(e.minutes)}）を削除しますか？`)) return;
+              if (await run(() => window.api.deleteEntry(entryKey(e)))) toast('記録を削除しました');
+            },
+          }, '削除'),
+        ),
+      );
+      return tr;
+    }),
   );
+
+  const more = $('recent-more');
+  more.replaceChildren();
+  if (all.length > rows.length) {
+    more.append(
+      el('button', {
+        onclick: () => {
+          recentLimit += 20;
+          renderRecent();
+        },
+      }, `もっと見る（残り${all.length - rows.length}件）`),
+    );
+  } else if (recentLimit > RECENT_STEP) {
+    more.append(el('button', { onclick: () => { recentLimit = RECENT_STEP; renderRecent(); } }, '表示を減らす'));
+  }
 }
 
 // ---------- 習慣の編集 ----------

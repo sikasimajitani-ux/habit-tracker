@@ -35,6 +35,19 @@
     return habit;
   }
 
+  const sameEntry = (e, k) => e.date === k.date && e.habit === k.habit && e.start === k.start && e.end === k.end;
+
+  // 日をまたいだら翌日として計算する（23:30〜00:20 は50分）
+  function minutesBetween(start, end) {
+    for (const t of [start, end]) {
+      const m = /^(\d{2}):(\d{2})$/.exec(t);
+      if (!m || Number(m[1]) > 23 || Number(m[2]) > 59) throw new Error(`時刻の形式が正しくありません：${t}`);
+    }
+    const toMin = (t) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3, 5));
+    const diff = toMin(end) - toMin(start);
+    return diff < 0 ? diff + 24 * 60 : diff;
+  }
+
   const api = {
     async getState() {
       return update(() => {});
@@ -102,6 +115,23 @@
         const j = i + dir;
         if (i < 0 || j < 0 || j >= d.habits.length) return;
         [d.habits[i], d.habits[j]] = [d.habits[j], d.habits[i]];
+      });
+    },
+    async updateEntry(key, patch) {
+      return update((d) => {
+        const target = d.entries.find((e) => sameEntry(e, key));
+        if (!target) throw new Error('直す記録が見つかりませんでした');
+        const start = patch.start ?? target.start;
+        const end = patch.end ?? target.end;
+        const minutes = minutesBetween(start, end);
+        Object.assign(target, { start, end, minutes, memo: (patch.memo ?? target.memo ?? '').trim() });
+      });
+    },
+    async deleteEntry(key) {
+      return update((d) => {
+        const rest = d.entries.filter((e) => !sameEntry(e, key));
+        if (rest.length === d.entries.length) throw new Error('消す記録が見つかりませんでした');
+        d.entries = rest;
       });
     },
     // PC版の「iPhoneから取り込み」で読むファイルの中身

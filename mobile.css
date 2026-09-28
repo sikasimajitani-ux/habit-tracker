@@ -49,9 +49,17 @@ select {
   -webkit-overflow-scrolling: touch;
 }
 
-#recent td:nth-child(3),
+#recent tr:not(.editing) td:nth-child(3),
 #recent th:nth-child(3) {
-  display: none; /* 狭い画面では時間帯を省く */
+  display: none; /* 狭い画面では時間帯を省く（修正中の行は出す） */
+}
+
+.row-actions button {
+  padding: 6px 10px; /* 指で押しやすく */
+}
+
+#recent input.time {
+  width: 80px;
 }
 
 td,
@@ -74,4 +82,42 @@ th {
 
 .legend-note {
   display: none;
+}
+
+/* 修正中の行：入力欄を折り返して画面内に収める */
+.edit-box {
+  gap: 6px;
+}
+
+.edit-box .edit-label {
+  flex-basis: 100%;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.edit-box input:not(.time) {
+  flex-basis: 100%;
+}
+
+.edit-box .row-actions {
+  flex-basis: 100%;
+  text-align: left;
+}
+
+.edit-box .row-actions button {
+  margin: 0 8px 0 0;
+  padding: 8px 14px;
+}
+
+#recent tr:not(.editing) td:nth-child(2) {
+  white-space: nowrap; /* 習慣名を1文字ずつ折り返さない */
+}
+
+/* メモは1行で表示し、長いときは末尾を「…」にする */
+#recent tr:not(.editing) td:nth-child(5) {
+  max-width: 0;
+  width: 99%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

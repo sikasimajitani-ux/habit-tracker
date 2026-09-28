@@ -354,3 +354,49 @@ details summary {
 .toast.show {
   opacity: 1;
 }
+
+.row-actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.row-actions button {
+  padding: 3px 8px;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.row-actions .danger {
+  color: var(--danger);
+}
+
+#recent input.time {
+  width: 92px;
+  padding: 4px 6px;
+}
+
+#recent td input {
+  font-size: 13px;
+}
+
+.recent-more {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.edit-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.edit-label {
+  white-space: nowrap;
+}
+
+.edit-box input:not(.time) {
+  flex: 1;
+  min-width: 120px;
+}
